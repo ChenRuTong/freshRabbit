@@ -1,5 +1,5 @@
 <template>
-  <div :class="['layout', { 'active': !isNav }]">
+  <div :class="['layout', { active: !isNav }]">
     <cNav v-if="isNav"></cNav>
     <cHeader @changeW="changeW" ref="cHeaderRef" :iscHeader="iscHeader" />
     <RouterView />
@@ -11,11 +11,15 @@
   import cHeader from '@/components/header/index.vue'
   import cFooter from './components/footer.vue'
   import cNav from './components/nav.vue'
+  import { useCategoryStore } from '@/stores/category'
   import { ref, onMounted, onBeforeUnmount } from 'vue'
 
   const cHeaderRef = ref()
   const iscHeader = ref(false)
   const isNav = ref(true)
+
+  const CategoryStore = useCategoryStore()
+  CategoryStore.getCategoryList()
 
   onMounted(() => {
     window.addEventListener('scroll', getScroll)

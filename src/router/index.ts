@@ -25,8 +25,8 @@ const router = createRouter({
           component: () => import('../views/home/index.vue'),
         },
         {
-          path: 'atHome',
-          name: 'atHome',
+          path: 'category/:id',
+          name: 'category',
           component: () => import('../views/atHome.vue'),
         },
         {

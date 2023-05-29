@@ -9,7 +9,6 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
-    ElAffix: typeof import('element-plus/es')['ElAffix']
     ElBadge: typeof import('element-plus/es')['ElBadge']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCarousel: typeof import('element-plus/es')['ElCarousel']
@@ -19,17 +18,15 @@ declare module '@vue/runtime-core' {
     ElEmpty: typeof import('element-plus/es')['ElEmpty']
     ElIcon: typeof import('element-plus/es')['ElIcon']
     ElInput: typeof import('element-plus/es')['ElInput']
-    ElRadio: typeof import('element-plus/es')['ElRadio']
     ElRow: typeof import('element-plus/es')['ElRow']
     ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
     Error: typeof import('./src/components/error/index.vue')['default']
     Header: typeof import('./src/components/header/index.vue')['default']
+    Loading: typeof import('./src/components/header/components/loading.vue')['default']
     Logo: typeof import('./src/components/header/components/logo.vue')['default']
     Menu: typeof import('./src/components/header/components/menu.vue')['default']
-    ProductCard: typeof import('./src/components/productCard.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    S: typeof import('./src/components/header/components/s.vue')['default']
     Search: typeof import('./src/components/header/components/search.vue')['default']
   }
 }

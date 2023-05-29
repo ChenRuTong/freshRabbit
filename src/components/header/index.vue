@@ -2,14 +2,14 @@
   <div class="tabs" v-if="!iscHeader && !isThirdTabs">
     <div class="tabsBox content">
       <clogo />
-      <cMenu :tabsData="tabsData" />
+      <cMenu/>
       <cSearch v-model="SearchInfo"></cSearch>
     </div>
   </div>
 
   <Transition enter-active-class="animate__animated animate__pulse">
     <div class="secondTabs" v-if="iscHeader && !isThirdTabs">
-      <cMenu :tabsData="tabsData" />
+      <cMenu/>
       <cSearch v-model="SearchInfo"></cSearch>
     </div>
   </Transition>
@@ -26,8 +26,13 @@
     <template #default>
       <el-scrollbar height="400px">
         <ul class="ulMenu">
-          <li v-for="(tabsItem, index) in tabsData" :key="index">
-            <RouterLink class="linkBox" :to="tabsItem.path">
+          <li>
+            <RouterLink class="linkBox" to="/layout/home">
+              <span>首页</span>
+            </RouterLink>
+          </li>
+          <li v-for="(tabsItem, index) in CategoryStore.categoryList" :key="index">
+            <RouterLink class="linkBox" :to="'/layout/category/' + tabsItem.id">
               <span>{{ tabsItem.name }}</span>
             </RouterLink>
           </li>
@@ -41,6 +46,7 @@
   import { ref, onMounted, onBeforeUnmount } from 'vue'
   import { Operation } from '@element-plus/icons-vue'
   import { RouterLink } from 'vue-router'
+  import { useCategoryStore } from '@/stores/category'
   import clogo from './components/logo.vue'
   import cMenu from './components/menu.vue'
   import cSearch from './components/search.vue'
@@ -52,53 +58,12 @@
     window.removeEventListener('resize', resize)
   })
 
+  const CategoryStore = useCategoryStore()
   const props = defineProps<{
     iscHeader?: boolean
   }>()
   const emit = defineEmits(['changeW'])
   const SearchInfo = ref('')
-  const tabsData = ref([
-    {
-      name: '首页',
-      path: '/layout/home',
-    },
-    {
-      name: '居家',
-      path: '/layout/atHome',
-    },
-    {
-      name: '美食',
-      path: '/layout/delicacy',
-    },
-    {
-      name: '服饰',
-      path: '/layout/dress',
-    },
-    {
-      name: '母婴',
-      path: '/layout/motherBaby',
-    },
-    {
-      name: '个护',
-      path: '/layout/personalCare',
-    },
-    {
-      name: '严选',
-      path: '/layout/strictSelection',
-    },
-    {
-      name: '数码',
-      path: '/layout/numericalCode',
-    },
-    {
-      name: '运动',
-      path: '/layout/motion',
-    },
-    {
-      name: '杂项',
-      path: '/layout/miscellaneous',
-    },
-  ])
   const isThirdTabs = ref(false)
   const menuDrawer = ref(false)
 

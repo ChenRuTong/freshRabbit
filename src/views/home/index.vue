@@ -11,10 +11,10 @@
         </el-carousel>
         <cError v-else error-info="请求失败" height="500"></cError>
         <div class="leftBox" @mouseleave="mouseleave">
-          <ul class="roll" v-if="!categoryError">
+          <ul class="roll" v-if="!CategoryStore.categoryError && CategoryStore.categoryList.length !== 0">
             <li
               @mouseenter="mouseenter(categoryItem)"
-              v-for="(categoryItem, index) in categoryList"
+              v-for="(categoryItem, index) in CategoryStore.categoryList"
               :key="categoryItem.id">
               <span class="mr-10" @click="mouseenterItemize(categoryItem)" :tabindex="categoryItem.id"
                 >{{ categoryItem.name }}
@@ -26,7 +26,12 @@
               </div>
             </li>
           </ul>
-          <cError v-else error-info="请求失败" height="500" width="320"></cError>
+          <cError v-if="CategoryStore.categoryError" error-info="请求失败" height="500" width="320"></cError>
+          <cError
+            v-if="CategoryStore.categoryList.length == 0 && !CategoryStore.categoryError"
+            :error-info="CategoryStore.categoryLoading ? '加载中': '空数据'"
+            height="500"
+            width="320"></cError>
           <Transition
             enter-active-class="animate__animated animate__zoomIn"
             leave-active-class="animate__animated animate__zoomOut">
@@ -74,7 +79,7 @@
     <productCard title="人气推荐" txt="人气爆款，不容错过"></productCard>
     <productSort
       :categoryItem="categoryItem"
-      v-for="(categoryItem, index) in categoryList"
+      v-for="(categoryItem, index) in CategoryStore.categoryList"
       :key="categoryItem.id"></productSort>
   </div>
 </template>
@@ -85,27 +90,20 @@
   import productCard from './components/productCard.vue'
   import productSort from './components/productSort.vue'
   import cError from '@/components/error/index.vue'
-  import {
-    getBanner,
-    getCategory,
-    type IbannerResult,
-    type IcategoryResult,
-    type IcategoryChildren,
-  } from '@/api/home'
+  import { useCategoryStore } from '@/stores/category'
+  import { getBanner, type IbannerResult, type IcategoryResult, type IcategoryChildren } from '@/api/home'
 
+  const CategoryStore = useCategoryStore()
   const bannerList: Ref<IbannerResult[]> = ref([])
-  const categoryList: Ref<IcategoryResult[]> = ref([])
   const secondCategoryList: Ref<IcategoryChildren[]> = ref([])
   const thirdCategoryList: Ref<IcategoryChildren[]> = ref([])
   const bannerRef = ref()
   const isSecondhoverBox = ref(false)
   const isThirdhoverBox = ref(false)
   const bannerListError = ref(false)
-  const categoryError = ref(false)
 
   onMounted(() => {
     getBannerList()
-    getCategoryList()
   })
   const getBannerList = async () => {
     //@ts-ignore
@@ -121,16 +119,6 @@
       bannerListError.value = true
     } finally {
       loadingBanner.close()
-    }
-  }
-
-  const getCategoryList = async () => {
-    try {
-      const { code, result, msg } = await getCategory()
-      categoryList.value = result
-    } catch (err) {
-      categoryError.value = true
-    } finally {
     }
   }
 
