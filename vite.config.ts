@@ -14,16 +14,16 @@ export default defineConfig({
     vue(),
     vueJsx(),
     AutoImport({
-      resolvers: [ElementPlusResolver()],
+      resolvers: [ElementPlusResolver({ importStyle: 'sass' })],
     }),
     Components({
-      resolvers: [ElementPlusResolver({importStyle: "sass"})],
+      resolvers: [ElementPlusResolver({ importStyle: 'sass' })]
     }),
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
   },
   css: {
     preprocessorOptions: {

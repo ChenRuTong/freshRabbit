@@ -28,7 +28,7 @@
     window.removeEventListener('scroll', getScroll)
   })
 
-  const getScroll = (e: Event) => {
+  const getScroll = () => {
     if (window.scrollY >= 157) {
       iscHeader.value = true
     } else {

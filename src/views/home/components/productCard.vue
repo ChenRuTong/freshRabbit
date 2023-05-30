@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
   import { getNew, getHot } from '@/api/home'
-  import cLoading from './loading.vue'
+  import cLoading from '@/components/loading/index.vue'
   import cError from '@/components/error/index.vue'
   import { reactive, ref, watch, type Ref, onMounted } from 'vue'
 

@@ -27,14 +27,15 @@
       </div>
     </el-col>
   </el-row>
-  <menuLoading v-if="CategoryStore.categoryLoading"></menuLoading>
+  <cLoading :loading-way="lodingType.Third" v-if="CategoryStore.categoryLoading"></cLoading>
 
   <div class="errorBox" v-if="CategoryStore.categoryError">请求失败</div>
 </template>
 
 <script setup lang="ts">
   import { useCategoryStore } from '@/stores/category'
-  import menuLoading from './loading.vue'
+  import { lodingType } from '@/enum/index'
+  import cLoading from '@/components/loading/index.vue'
 
   const CategoryStore = useCategoryStore()
 </script>

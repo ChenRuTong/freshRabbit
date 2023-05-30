@@ -1,5 +1,5 @@
 <template>
-  <div class="productSort">
+  <div class="productSort" v-for="(categoryItem, index) in CategoryStore.categoryList" :key="categoryItem.id">
     <div class="content">
       <div class="title">{{ categoryItem.name }}</div>
       <div class="contenBox">
@@ -29,19 +29,32 @@
       </div>
     </div>
   </div>
+  <div class="productSort">
+    <div class="content">
+      <cLoading v-if="CategoryStore.categoryLoading" :loading-way="lodingType.Second"></cLoading>
+    </div>
+  </div>
+  <div
+    class="productSort"
+    v-if="CategoryStore.categoryList.length == 0 && !CategoryStore.categoryLoading && !CategoryStore.categoryError">
+    <div class="content">
+      <cError error-info="空数据"></cError>
+    </div>
+  </div>
+  <div class="productSort" v-if="!CategoryStore.categoryLoading && CategoryStore.categoryError">
+    <div class="content">
+      <cError error-info="请求失败"></cError>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-  import type { IcategoryResult } from '@/api/home'
+  import { useCategoryStore } from '@/stores/category'
+  import cError from '@/components/error/index.vue'
+  import cLoading from '@/components/loading/index.vue'
+  import { lodingType } from '@/enum/index'
 
-  const props = withDefaults(
-    defineProps<{
-      categoryItem: IcategoryResult
-    }>(),
-    {
-      categoryItem: () => ({} as IcategoryResult),
-    }
-  )
+  const CategoryStore = useCategoryStore()
 </script>
 
 <style scoped lang="scss">
