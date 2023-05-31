@@ -1,15 +1,6 @@
 <template>
   <div class="flexbox" v-if="loadingWay === lodingType.One">
-    <div>
-      <span>加载中</span>
-    </div>
-    <div>
-      <span>加载中</span>
-    </div>
-    <div>
-      <span>加载中</span>
-    </div>
-    <div>
+    <div :style="{ 'width': width+'px', 'height': height+'px' }" v-for="item, index in num" :key="index">
       <span>加载中</span>
     </div>
   </div>
@@ -50,10 +41,14 @@
   import { lodingType } from '@/enum'
   const props = withDefaults(
     defineProps<{
-      loadingWay?: lodingType
+      loadingWay?: lodingType,
+      width?:string,
+      height?:string,
+      num?:number
     }>(),
     {
       loadingWay: lodingType.One,
+      num: 4
     }
   )
 </script>

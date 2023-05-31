@@ -5,7 +5,7 @@
         <span class="leftTxt">{{ title }}</span>
         <span class="rightTxt">{{ txt }}</span>
       </div>
-      <div class="cardItemBox" v-if="newList.length!== 0  && !statusInfo?.loading && !statusInfo?.error">
+      <div class="cardItemBox" v-if="newList.length !== 0 && !statusInfo?.loading && !statusInfo?.error">
         <div class="cardItem" v-for="(newItem, index) in newList" :key="newItem.id">
           <img v-lazy="newItem.picture" :alt="newItem.name" />
           <span class="titleBox tXtOverFlow" v-if="newItem.name">{{ newItem.name }}</span>
@@ -107,6 +107,11 @@
           flex-shrink: 0;
           text-align: center;
           cursor: pointer;
+          transition: all .5s;
+          &:hover {
+            box-shadow: 0 -1px 10px rgba(41, 186, 155, $alpha: 1.0);
+            transform: scale(1.01)
+          }
           img {
             display: block;
             width: 280px;

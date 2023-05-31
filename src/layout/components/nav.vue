@@ -30,10 +30,16 @@ import { User } from '@element-plus/icons-vue'
         span {
           color: rgb(145, 145, 144);
         }
+        .el-icon {
+          font-size: 15px;
+        }
       }
       .cbutton, :deep(.el-button.is-link):hover {
         span {
-          color: #ffffff;
+          color: rgb(41,186,155);
+        }
+        .el-icon {
+          color: rgb(41,186,155);
         }
       }
     }

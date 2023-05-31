@@ -29,9 +29,17 @@ const router = createRouter({
           name: 'category',
           component: () => import('../views/category/index.vue'),
         },
+        {
+          path: 'category/sub/:id',
+          name: 'screen',
+          component: () => import('../views/screen/index.vue'),
+        },
       ],
     },
   ],
+  scrollBehavior(to, from, savedPosition) {
+    return{ top: 0 }
+  },
 })
 
 export default router

@@ -23,7 +23,10 @@ declare module '@vue/runtime-core' {
     ElInput: typeof import('element-plus/es')['ElInput']
     ElRow: typeof import('element-plus/es')['ElRow']
     ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
+    ElTabPane: typeof import('element-plus/es')['ElTabPane']
+    ElTabs: typeof import('element-plus/es')['ElTabs']
     Error: typeof import('./src/components/error/index.vue')['default']
+    GoodItem: typeof import('./src/components/goodItem/index.vue')['default']
     Header: typeof import('./src/components/header/index.vue')['default']
     Loading: typeof import('./src/components/loading/index.vue')['default']
     Logo: typeof import('./src/components/header/components/logo.vue')['default']
@@ -31,5 +34,8 @@ declare module '@vue/runtime-core' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Search: typeof import('./src/components/header/components/search.vue')['default']
+  }
+  export interface ComponentCustomProperties {
+    vInfiniteScroll: typeof import('element-plus/es')['ElInfiniteScroll']
   }
 }

@@ -1,34 +1,23 @@
 <template>
-  <div class="productSort" v-for="(categoryItem, index) in CategoryStore.categoryList" :key="categoryItem.id">
-    <div class="content">
-      <div class="title">{{ categoryItem.name }}</div>
-      <div class="contenBox">
-        <div class="leftBox">
-          <img v-lazy="categoryItem.goods[0].picture" :alt="categoryItem.name" />
-        </div>
-        <div class="rightBox">
-          <div class="flexBox">
-            <div
-              :class="[
-                'goodItem',
-                {
-                  active:
-                    index > Math.floor(categoryItem.goods.length / 4) * 4 - 1 ||
-                    index >= (Math.ceil(categoryItem.goods.length / 4) - 1) * 4,
-                },
-              ]"
-              v-for="(categoryGoodsItem, index) in categoryItem.goods"
-              :key="categoryGoodsItem.id">
-              <img v-lazy="categoryGoodsItem.picture" :alt="categoryGoodsItem.name" />
-              <span class="oneTxt tXtOverFlow">{{ categoryGoodsItem.name }}</span>
-              <span class="twoTxt tXtOverFlow">{{ categoryGoodsItem.desc }}</span>
-              <span class="threeTxt">￥{{ categoryGoodsItem.price }}</span>
+  <template
+    v-if="CategoryStore.categoryList.length !== 0 && !CategoryStore.categoryLoading && !CategoryStore.categoryError">
+    <div class="productSort" v-for="(categoryItem, index) in CategoryStore.categoryList" :key="categoryItem.id">
+      <div class="content">
+        <div class="title">{{ categoryItem.name }}</div>
+        <div class="contenBox">
+          <div class="leftBox">
+            <img v-lazy="categoryItem.goods[0].picture" :alt="categoryItem.name" />
+          </div>
+          <div class="rightBox">
+            <div class="flexBox">
+              <cGoddItem :category-item="categoryItem.goods"></cGoddItem>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </template>
+
   <div class="productSort">
     <div class="content">
       <cLoading v-if="CategoryStore.categoryLoading" :loading-way="lodingType.Second"></cLoading>
@@ -52,6 +41,7 @@
   import { useCategoryStore } from '@/stores/category'
   import cError from '@/components/error/index.vue'
   import cLoading from '@/components/loading/index.vue'
+  import cGoddItem from '@/components/goodItem/index.vue'
   import { lodingType } from '@/enum/index'
 
   const CategoryStore = useCategoryStore()
@@ -61,6 +51,7 @@
   .productSort {
     background-color: #ffffff;
     padding-bottom: 30px;
+    padding-top: 30px;
     .content {
       .title {
         font-weight: 700;
@@ -83,35 +74,6 @@
             display: flex;
             flex-wrap: wrap;
             align-items: flex-start;
-            .goodItem {
-              width: 210px;
-              height: 226px;
-              flex-shrink: 0;
-              margin: 0px 10px 10px 10px;
-              text-align: center;
-              cursor: pointer;
-              &.active {
-                margin: 0px 10px 0px 10px;
-              }
-              img {
-                display: block;
-                width: 210px;
-                height: 150px;
-                margin-bottom: 8px;
-                border-radius: 5px;
-              }
-              .oneTxt {
-                margin-bottom: 5px;
-              }
-              .twoTxt {
-                font-size: 14px;
-                color: #cccc;
-                margin-bottom: 5px;
-              }
-              .threeTxt {
-                color: red;
-              }
-            }
           }
         }
       }

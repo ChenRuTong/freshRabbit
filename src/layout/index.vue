@@ -43,7 +43,7 @@
 
 <style scoped lang="scss">
   .layout {
-    height: 100%;
+    min-height: 100%;
     background-color: rgb(243, 243, 243);
     &.active {
       padding-top: 84px;

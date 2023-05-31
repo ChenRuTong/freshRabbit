@@ -3,7 +3,11 @@
     <div class="content" ref="bannerRef">
       <cBanner>
         <div class="leftBox" @mouseleave="mouseleave">
-          <ul class="roll" v-if="!CategoryStore.categoryError && CategoryStore.categoryList.length !== 0">
+          <ul
+            class="roll"
+            v-if="
+              !CategoryStore.categoryError && CategoryStore.categoryList.length !== 0 && !CategoryStore.categoryLoading
+            ">
             <li
               @mouseenter="mouseenter(categoryItem)"
               v-for="(categoryItem, index) in CategoryStore.categoryList"
@@ -19,9 +23,12 @@
             </li>
           </ul>
           <cError v-if="CategoryStore.categoryError" error-info="请求失败" height="500" width="320"></cError>
+          <cError v-if="CategoryStore.categoryLoading" error-info="加载中" height="500" width="320"></cError>
           <cError
-            v-if="CategoryStore.categoryList.length == 0 && !CategoryStore.categoryError"
-            :error-info="CategoryStore.categoryLoading ? '加载中' : '空数据'"
+            v-if="
+              CategoryStore.categoryList.length == 0 && !CategoryStore.categoryError && !CategoryStore.categoryLoading
+            "
+            error-info="空数据"
             height="500"
             width="320"></cError>
           <Transition
@@ -152,14 +159,14 @@
             cursor: pointer;
             span {
               &:hover {
-                color: red;
+                color: rgb(41,186,155);
               }
               &:focus {
-                color: red;
+                color: rgb(41,186,155);
               }
             }
             &:hover {
-              background-color: rgba($color: #635f5f, $alpha: 0.9);
+              background-color: rgba(41,186,155, $alpha: 0.4);
             }
           }
         }
