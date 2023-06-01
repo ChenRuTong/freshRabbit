@@ -6,7 +6,7 @@
         <span class="rightTxt">{{ txt }}</span>
       </div>
       <div class="cardItemBox" v-if="newList.length !== 0 && !statusInfo?.loading && !statusInfo?.error">
-        <div class="cardItem" v-for="(newItem, index) in newList" :key="newItem.id">
+        <div class="cardItem" v-for="(newItem, index) in newList" :key="newItem.id" @click="goDetails(newItem.id)">
           <img v-lazy="newItem.picture" :alt="newItem.name" />
           <span class="titleBox tXtOverFlow" v-if="newItem.name">{{ newItem.name }}</span>
           <span class="titleBox tXtOverFlow" v-else>{{ newItem.title }}</span>
@@ -37,6 +37,8 @@
     }
   )
 
+  const emit = defineEmits(['goDetails'])
+
   const newList: Ref<any[]> = ref([])
   const statusInfo = reactive({
     loading: false,
@@ -53,6 +55,10 @@
     } else {
       getHotList()
     }
+  }
+
+  const goDetails = (id: string)=> {
+    emit('goDetails', id)
   }
 
   const getNewList = async () => {

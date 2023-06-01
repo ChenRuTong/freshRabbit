@@ -1,5 +1,5 @@
 <template>
-  <div class="tabs" v-if="!iscHeader && !isThirdTabs">
+  <div class="tabs" v-if="!isThirdTabs">
     <div class="tabsBox content">
       <clogo />
       <cMenu/>

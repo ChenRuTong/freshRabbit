@@ -1,8 +1,8 @@
 <template>
   <div class="category">
     <div class="content">
-      <div class="mt-10 mb-10">
-        <el-breadcrumb separator="/">
+      <div class="mt-20 mb-20">
+        <el-breadcrumb separator=">">
           <el-breadcrumb-item :to="{ path: '/layout/home' }">首页</el-breadcrumb-item>
           <el-breadcrumb-item>{{ SecondCategoryList.name }}</el-breadcrumb-item>
         </el-breadcrumb>

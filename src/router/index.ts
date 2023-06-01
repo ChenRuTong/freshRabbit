@@ -34,11 +34,21 @@ const router = createRouter({
           name: 'screen',
           component: () => import('../views/screen/index.vue'),
         },
+        {
+          path: 'category/sub/:id',
+          name: 'screen',
+          component: () => import('../views/screen/index.vue'),
+        },
+        {
+          path: 'details/:id',
+          name: 'details',
+          component: () => import('../views/details/index.vue'),
+        },
       ],
     },
   ],
   scrollBehavior(to, from, savedPosition) {
-    return{ top: 0 }
+    return { top: 0 }
   },
 })
 

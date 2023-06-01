@@ -74,7 +74,7 @@
         </div>
       </cBanner>
     </div>
-    <productCard title="新鲜好物" txt="新鲜出炉，品质靠谱"></productCard>
+    <productCard title="新鲜好物" txt="新鲜出炉，品质靠谱" @go-details="goDetails"></productCard>
     <productCard title="人气推荐" txt="人气爆款，不容错过"></productCard>
     <productSort></productSort>
   </div>
@@ -89,9 +89,11 @@
   import { useCategoryStore } from '@/stores/category'
   import { useBannerStore } from '@/stores/banner'
   import { type IcategoryResult, type IcategoryChildren } from '@/api/home'
+  import { useRouter } from 'vue-router'
 
   const CategoryStore = useCategoryStore()
   const useBanner = useBannerStore()
+  const router = useRouter()
   const secondCategoryList: Ref<IcategoryChildren[]> = ref([])
   const thirdCategoryList: Ref<IcategoryChildren[]> = ref([])
   const isSecondhoverBox = ref(false)
@@ -109,6 +111,10 @@
       return loadingBanner
     })
   })
+
+  const goDetails = (id: string) => {
+    router.push({ name: 'details', params: { id } })
+  }
 
   const mouseenter = (categoryItem: IcategoryResult) => {
     secondCategoryList.value = categoryItem.children.slice(2)
@@ -159,14 +165,14 @@
             cursor: pointer;
             span {
               &:hover {
-                color: rgb(41,186,155);
+                color: rgb(41, 186, 155);
               }
               &:focus {
-                color: rgb(41,186,155);
+                color: rgb(41, 186, 155);
               }
             }
             &:hover {
-              background-color: rgba(41,186,155, $alpha: 0.4);
+              background-color: rgba(41, 186, 155, $alpha: 0.4);
             }
           }
         }
