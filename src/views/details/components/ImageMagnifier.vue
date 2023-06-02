@@ -112,8 +112,8 @@
     const maxY = 400 - 75
     const x = e.layerX > 400 - 75 ? maxX : e.layerX < 75 ? 75 : e.layerX
     const y = e.layerY > 400 - 75 ? maxY : e.layerY < 75 ? 75 : e.layerY
-    maskRef.value ? maskRef.value.style.transform = `translate(${x - 75}px, ${y - 75}px)` : ''
-    bigImgRef.value ? bigImgRef.value.style.transform = `translate(${-e.layerX}px, ${-e.layerY}px)` : ''
+    maskRef.value ? (maskRef.value.style.transform = `translate(${x - 75}px, ${y - 75}px)`) : ''
+    bigImgRef.value ? (bigImgRef.value.style.transform = `translate(${-e.layerX}px, ${-e.layerY}px)`) : ''
   }
 </script>
 
@@ -186,7 +186,7 @@
         .bottom {
           color: #666;
           &:hover {
-            color: #27ba9b
+            color: #27ba9b;
           }
         }
       }

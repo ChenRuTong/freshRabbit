@@ -1,6 +1,6 @@
 <template>
   <div class="shoppingCartForm">
-    <span class="goodName">{{ GoodsDetailsList.name }}</span>
+    <span class="name">{{ GoodsDetailsList.name }}</span>
     <span class="goodTxt">{{ GoodsDetailsList.desc }}</span>
     <div class="priceBox"
       ><span class="now">￥{{ GoodsDetailsList.price }}</span>
@@ -25,21 +25,24 @@
       <div class="textBox">{{ item.name }}</div>
       <div class="flexBox">
         <div v-for="(valuesItem, index) in item.values">
-          <div @click="changeColor" class="imgBox" v-if="valuesItem.picture"
+          <div @click="changeColor(valuesItem, item.name, $event)" class="imgBox" v-if="valuesItem.picture"
             ><img v-lazy="valuesItem.picture"
           /></div>
-          <div v-else class="sizeItem" @click="changeSize">{{ valuesItem.name }}</div>
+          <div v-else class="sizeItem" @click="changeSize(valuesItem, item.name, $event)">{{ valuesItem.name }}</div>
         </div>
       </div>
     </div>
     <div class="mb-20"> <el-input-number v-model="goodNum" :min="1" :max="10" @change="handleChange" /></div>
-    <el-button type="primary">加入购物车</el-button>
+    <el-button type="primary" @click="addCard">加入购物车</el-button>
   </div>
 </template>
 
 <script setup lang="ts">
-  import type { IgoodsDetailsResult } from '@/api/details'
-  import { ref } from 'vue'
+  import type { IgoodsDetailsResult, IgoodsDetailsValue } from '@/api/details'
+  import { useCloned } from '@vueuse/core'
+  import { getToken } from '@/utils/auth'
+  import { useShoppingCartStore } from '@/stores/shoppingCart'
+  import { ref, type Ref } from 'vue'
 
   const props = withDefaults(
     defineProps<{
@@ -47,39 +50,106 @@
     }>(),
     {}
   )
+  const useShoppingCart = useShoppingCartStore()
   const goodNum = ref(1)
+  const cardInfo: Ref<any> = ref({
+    id: '',
+    skuId: '',
+    name: '',
+    attrsText: '',
+    specs: [],
+    picture: '',
+    price: '',
+    nowPrice: '',
+    nowOriginalPrice:'',
+    selected: true,
+    stock: 0,
+    count: 1,
+    isEffective: true,
+    discount:null,
+    isCollect: false,
+    postFee: 0,
+    skuName: [],
+  })
 
-  const changeColor = (val: any) => {
+  cardInfo.value.skuName = useCloned(props.GoodsDetailsList.specs)
+  cardInfo.value.price = useCloned(props.GoodsDetailsList.price)
+  cardInfo.value.name = useCloned(props.GoodsDetailsList.name)
+
+  const changeColor = (val: IgoodsDetailsValue, skuName: string, e: any) => {
     const domList = document.querySelectorAll('.imgBox')
-    if (val.target.className === 'imgBox active') {
-      val.target.className = 'imgBox'
+    if (e.target.className === 'imgBox active') {
+      setSkuName(skuName, null)
+      e.target.className = 'imgBox'
     } else {
+      setSkuName(skuName, val.name)
       domList.forEach((item, index) => {
         item.className = 'imgBox'
       })
-      val.target.className = 'imgBox active'
+      e.target.className = 'imgBox active'
     }
   }
 
-  const changeSize = (val:any) => {
+  const setSkuName = (skuName: string, val: string | null) => {
+    cardInfo.value.skuName.cloned.some((item: any, index: number) => {
+      if (item.name === skuName) {
+        item.values = val
+        return true
+      }
+    })
+  }
+
+  const changeSize = (val: IgoodsDetailsValue, skuName: string, e: any) => {
     const domList = document.querySelectorAll('.sizeItem')
-    if (val.target.className === 'sizeItem active') {
-      val.target.className = 'sizeItem'
+    if (e.target.className === 'sizeItem active') {
+      setSkuName(skuName, null)
+      e.target.className = 'sizeItem'
     } else {
+      setSkuName(skuName, val.name)
       domList.forEach((item, index) => {
         item.className = 'sizeItem'
       })
-      val.target.className = 'sizeItem active'
+      e.target.className = 'sizeItem active'
     }
   }
 
-  const handleChange = () => {}
+  const addCard = () => {
+    if (getToken()) {
+      console.log('aa')
+    } else {
+      props.GoodsDetailsList.skus.forEach((skusItem, sindex) => {
+        if (compareArrays(skusItem.specs, cardInfo.value.skuName.cloned)) {
+          cardInfo.value.skuId = skusItem.id
+          useShoppingCart.addCart(cardInfo.value)
+        }
+      })
+    }
+  }
+  const compareArrays = (arr1: any, arr2: any) => {
+    // 如果数组长度不相等，则两个数组不相等
+    if (arr1.length !== arr2.length) {
+      return false
+    }
+
+    // 逐个比较元素是否相等
+    for (let i = 0; i < arr1.length; i++) {
+      if (arr1[i].valueName !== arr2[i].values) {
+        return false
+      }
+    }
+
+    return true
+  }
+
+  const handleChange = (val: number) => {
+    cardInfo.value.count = val
+  }
 </script>
 
 <style scoped lang="scss">
   .shoppingCartForm {
     flex: 1;
-    .goodName {
+    .name {
       display: block;
       font-size: 20px;
       color: rgb(110, 51, 51);

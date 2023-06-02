@@ -130,10 +130,38 @@ export interface IgoodsDetails {
   result: IgoodsDetailsResult
 }
 
-export const getGoodsDetails = (id: string | string[]):Promise<IgoodsDetails> => {
+export const getGoodsDetails = (id: string | string[]): Promise<IgoodsDetails> => {
   return request({
     method: 'get',
     url: '/goods',
     params: { id },
+  })
+}
+
+export interface IgoodHotQuery {
+  id: string | string[]
+  type: number
+  limit: number
+}
+export interface IgoodHotResult {
+  id: string
+  name: string
+  desc: string
+  price: string
+  picture: string
+  orderNum: number
+}
+
+export interface IgoodHot {
+  code: string
+  msg: string
+  result: IgoodHotResult[]
+}
+
+export const getGoodHot = (params: IgoodHotQuery): Promise<IgoodHot> => {
+  return request({
+    url: '/goods/hot',
+    method: 'get',
+    params,
   })
 }
