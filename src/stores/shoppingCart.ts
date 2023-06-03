@@ -7,11 +7,10 @@ export const useShoppingCartStore = defineStore('shoppingCart', {
   actions: {
     addCart(val: any) {
       this.isAddCar = true
-      console.log(val.skuId, this.carList.length !== 0)
       if (this.carList.length !== 0) {
         const iSset = this.carList.some((item, index) => {
           if (item.skuId === val.skuId) {
-            item.count++
+            item.count += val.count
             return true
           }
         })
@@ -22,9 +21,21 @@ export const useShoppingCartStore = defineStore('shoppingCart', {
         this.carList = [...this.carList, { ...val }]
       }
       localStorage.setItem('freshrabbitCart', JSON.stringify(this.carList))
-      setTimeout(()=> {
+      setTimeout(() => {
         this.isAddCar = false
-      },1000)
+      }, 1000)
     },
+  },
+  getters: {
+    allprice(): number {
+      return this.carList.reduce((num: number, item: any, index: number) => {
+        return num += (Number(item.price.cloned) * Number(item.count))
+      }, 0)
+    },
+    allGoodNum():number {
+      return this.carList.reduce((num: number, item: any, index: number) => {
+        return num +=  Number(item.count)
+      }, 0)
+    }
   },
 })

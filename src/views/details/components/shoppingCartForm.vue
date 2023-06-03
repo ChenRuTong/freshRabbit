@@ -21,14 +21,14 @@
       </div>
     </div>
 
-    <div class="normsBox" v-for="(item, index) in GoodsDetailsList.specs">
+    <div class="normsBox" v-for="(item, index) in GoodsDetailsList.specs" :key="item.id">
       <div class="textBox">{{ item.name }}</div>
       <div class="flexBox">
         <div v-for="(valuesItem, index) in item.values">
-          <div @click="changeColor(valuesItem, item.name, $event)" class="imgBox" v-if="valuesItem.picture"
+          <div :class="['imgBox', `imgBox${item.id}`]" @click="changeColor(valuesItem, item.name, `imgBox${item.id}`,  $event)" v-if="valuesItem.picture"
             ><img v-lazy="valuesItem.picture"
           /></div>
-          <div v-else class="sizeItem" @click="changeSize(valuesItem, item.name, $event)">{{ valuesItem.name }}</div>
+          <div v-else :class="['sizeItem', `sizeItem${item.id}`]" @click="changeSize(valuesItem, item.name, `sizeItem${item.id}`, $event)">{{ valuesItem.name }}</div>
         </div>
       </div>
     </div>
@@ -76,17 +76,17 @@
   cardInfo.value.price = useCloned(props.GoodsDetailsList.price)
   cardInfo.value.name = useCloned(props.GoodsDetailsList.name)
 
-  const changeColor = (val: IgoodsDetailsValue, skuName: string, e: any) => {
-    const domList = document.querySelectorAll('.imgBox')
-    if (e.target.className === 'imgBox active') {
+  const changeColor = (val: IgoodsDetailsValue, skuName: string, className: string, e: any) => {
+    const domList = document.querySelectorAll(`.${className}`)
+    if (e.target.className.includes('active')) {
       setSkuName(skuName, null)
-      e.target.className = 'imgBox'
+      e.target.className = `imgBox ${className}`
     } else {
       setSkuName(skuName, val.name)
       domList.forEach((item, index) => {
-        item.className = 'imgBox'
+        item.className = `imgBox ${className}`
       })
-      e.target.className = 'imgBox active'
+      e.target.className = `imgBox ${className} active`
     }
   }
 
@@ -99,17 +99,17 @@
     })
   }
 
-  const changeSize = (val: IgoodsDetailsValue, skuName: string, e: any) => {
-    const domList = document.querySelectorAll('.sizeItem')
-    if (e.target.className === 'sizeItem active') {
+  const changeSize = (val: IgoodsDetailsValue, skuName: string, className: string, e: any) => {
+    const domList = document.querySelectorAll(`.${className}`)
+    if (e.target.className.includes('active')) {
       setSkuName(skuName, null)
-      e.target.className = 'sizeItem'
+      e.target.className = `sizeItem ${className}`
     } else {
       setSkuName(skuName, val.name)
       domList.forEach((item, index) => {
-        item.className = 'sizeItem'
+        item.className = `sizeItem ${className}`
       })
-      e.target.className = 'sizeItem active'
+      e.target.className = `sizeItem ${className} active`
     }
   }
 
@@ -120,6 +120,7 @@
       props.GoodsDetailsList.skus.forEach((skusItem, sindex) => {
         if (compareArrays(skusItem.specs, cardInfo.value.skuName.cloned)) {
           cardInfo.value.skuId = skusItem.id
+          cardInfo.value.picture = skusItem.picture
           useShoppingCart.addCart(cardInfo.value)
         }
       })

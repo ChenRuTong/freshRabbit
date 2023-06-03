@@ -33,6 +33,7 @@ export interface IgoodsDetailsSku {
   skuCode: string
   price: string
   oldPrice: string
+  picture: string
   inventory: number
   specs: IgoodsDetailsSpec[]
 }
