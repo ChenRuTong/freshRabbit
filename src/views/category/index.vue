@@ -58,7 +58,7 @@
         text: '加载中',
       })
       return loadingBanner
-    })
+    }, '2')
   })
 
   onBeforeRouteUpdate((e) => {

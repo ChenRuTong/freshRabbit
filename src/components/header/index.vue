@@ -2,15 +2,19 @@
   <div class="tabs" v-if="!isThirdTabs">
     <div class="tabsBox content">
       <clogo />
-      <cMenu/>
+      <cMenu />
       <cSearch v-model="SearchInfo"></cSearch>
+      <cCart v-if="!iscHeader"></cCart>
     </div>
   </div>
 
   <Transition enter-active-class="animate__animated animate__pulse">
     <div class="secondTabs" v-if="iscHeader && !isThirdTabs">
-      <cMenu/>
-      <cSearch v-model="SearchInfo"></cSearch>
+      <cMenu />
+      <div style="display: flex">
+        <cSearch v-model="SearchInfo"></cSearch>
+        <cCart></cCart>
+      </div>
     </div>
   </Transition>
 
@@ -50,6 +54,7 @@
   import clogo from './components/logo.vue'
   import cMenu from './components/menu.vue'
   import cSearch from './components/search.vue'
+  import cCart from './components/cart.vue'
 
   onMounted(() => {
     window.addEventListener('resize', resize)
@@ -58,7 +63,9 @@
     window.removeEventListener('resize', resize)
   })
 
+
   const CategoryStore = useCategoryStore()
+  const cartRef = ref()
   const props = defineProps<{
     iscHeader?: boolean
   }>()

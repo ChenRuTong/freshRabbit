@@ -166,3 +166,24 @@ export const getGoodHot = (params: IgoodHotQuery): Promise<IgoodHot> => {
     params,
   })
 }
+
+export interface IstockResult {
+  nowPrice: number
+  oldPrice?: any
+  stock: number
+  discount?: any
+  isEffective: boolean
+}
+
+export interface Istock {
+  code: string
+  msg: string
+  result: IstockResult
+}
+
+export const getStock = (id: string):Promise<Istock> => {
+  return request({
+    url: `/goods/stock/${id}`,
+    method: 'get',
+  })
+}

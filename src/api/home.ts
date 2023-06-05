@@ -13,10 +13,11 @@ export interface Ibanner {
   result: IbannerResult[]
 }
 
-export const getBanner = (): Promise<Ibanner> => {
+export const getBanner = (id:string = '1'): Promise<Ibanner> => {
   return request({
     url: '/home/banner',
     method: 'get',
+    params: { distributionSite: id }
   })
 }
 

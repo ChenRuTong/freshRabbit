@@ -7,14 +7,12 @@ export const useBannerStore = defineStore('banner', {
     bannerListError: false as boolean,
   }),
   actions: {
-    async getBannerList(cb1: Function) {
+    async getBannerList(cb1: Function, id: string = '1') {
       let loadingBanner = null
       try {
-        if (this.bannerList.length === 0) {
-          loadingBanner = cb1()
-          const { code, result, msg } = await getBanner()
-          this.bannerList = result
-        }
+        loadingBanner = cb1()
+        const { code, result, msg } = await getBanner(id)
+        this.bannerList = result
       } catch (err) {
         this.bannerListError = true
       } finally {

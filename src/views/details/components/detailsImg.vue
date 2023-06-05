@@ -26,6 +26,7 @@
 
 <style scoped lang="scss">
   .detailsImg {
+    flex: 1;
     flex-shrink: 0;
     background-color: #ffffff;
     .title {

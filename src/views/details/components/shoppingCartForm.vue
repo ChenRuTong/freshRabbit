@@ -25,22 +25,29 @@
       <div class="textBox">{{ item.name }}</div>
       <div class="flexBox">
         <div v-for="(valuesItem, index) in item.values">
-          <div :class="['imgBox', `imgBox${item.id}`]" @click="changeColor(valuesItem, item.name, `imgBox${item.id}`,  $event)" v-if="valuesItem.picture"
+          <div
+            :class="['imgBox', `imgBox${item.id}`]"
+            @click="changeColor(valuesItem, item.name, `imgBox${item.id}`, $event)"
+            v-if="valuesItem.picture"
             ><img v-lazy="valuesItem.picture"
           /></div>
-          <div v-else :class="['sizeItem', `sizeItem${item.id}`]" @click="changeSize(valuesItem, item.name, `sizeItem${item.id}`, $event)">{{ valuesItem.name }}</div>
+          <div
+            v-else
+            :class="['sizeItem', `sizeItem${item.id}`]"
+            @click="changeSize(valuesItem, item.name, `sizeItem${item.id}`, $event)"
+            >{{ valuesItem.name }}</div
+          >
         </div>
       </div>
     </div>
-    <div class="mb-20"> <el-input-number v-model="goodNum" :min="1" :max="10" @change="handleChange" /></div>
+    <div class="mb-20"> <el-input-number v-model="goodNum" :min="1" @change="handleChange" /></div>
     <el-button type="primary" @click="addCard">加入购物车</el-button>
   </div>
 </template>
 
 <script setup lang="ts">
-  import type { IgoodsDetailsResult, IgoodsDetailsValue } from '@/api/details'
+  import { getStock, type IgoodsDetailsResult, type IgoodsDetailsSpec, type IgoodsDetailsValue } from '@/api/details'
   import { useCloned } from '@vueuse/core'
-  import { getToken } from '@/utils/auth'
   import { useShoppingCartStore } from '@/stores/shoppingCart'
   import { ref, type Ref } from 'vue'
 
@@ -52,6 +59,8 @@
   )
   const useShoppingCart = useShoppingCartStore()
   const goodNum = ref(1)
+  const stockLoding = ref(false)
+  const stockError = ref(false)
   const cardInfo: Ref<any> = ref({
     id: '',
     skuId: '',
@@ -61,18 +70,20 @@
     picture: '',
     price: '',
     nowPrice: '',
-    nowOriginalPrice:'',
+    nowOriginalPrice: '',
     selected: true,
     stock: 0,
     count: 1,
     isEffective: true,
-    discount:null,
+    discount: null,
     isCollect: false,
     postFee: 0,
-    skuName: [],
   })
 
-  cardInfo.value.skuName = useCloned(props.GoodsDetailsList.specs)
+  const skuName: Ref<any> = ref([])
+
+  cardInfo.value.id = useCloned(props.GoodsDetailsList.id)
+  skuName.value = useCloned(props.GoodsDetailsList.specs)
   cardInfo.value.price = useCloned(props.GoodsDetailsList.price)
   cardInfo.value.name = useCloned(props.GoodsDetailsList.name)
 
@@ -90,15 +101,6 @@
     }
   }
 
-  const setSkuName = (skuName: string, val: string | null) => {
-    cardInfo.value.skuName.cloned.some((item: any, index: number) => {
-      if (item.name === skuName) {
-        item.values = val
-        return true
-      }
-    })
-  }
-
   const changeSize = (val: IgoodsDetailsValue, skuName: string, className: string, e: any) => {
     const domList = document.querySelectorAll(`.${className}`)
     if (e.target.className.includes('active')) {
@@ -114,18 +116,78 @@
   }
 
   const addCard = () => {
-    if (getToken()) {
-      console.log('aa')
-    } else {
-      props.GoodsDetailsList.skus.forEach((skusItem, sindex) => {
-        if (compareArrays(skusItem.specs, cardInfo.value.skuName.cloned)) {
-          cardInfo.value.skuId = skusItem.id
-          cardInfo.value.picture = skusItem.picture
-          useShoppingCart.addCart(cardInfo.value)
-        }
-      })
+    for (let i = 0; i < skuName.value.cloned.length; i++) {
+      if (Array.isArray(skuName.value.cloned[i].values)) {
+        //@ts-ignore
+        ElMessage({
+          message: `请选择商品${skuName.value.cloned[i].name}`,
+          type: 'warning',
+        })
+        return
+      } else if (skuName.value.cloned[i].values === null) {
+        //@ts-ignore
+        ElMessage({
+          message: `请选择商品${skuName.value.cloned[i].name}`,
+          type: 'warning',
+        })
+        return
+      }
     }
+    props.GoodsDetailsList.skus.forEach(async (skusItem, sindex) => {
+      if (compareArrays(skusItem.specs, skuName.value.cloned)) {
+        try {
+          stockLoding.value = true
+          const { msg, code, result } = await getStock(skusItem.id)
+          cardInfo.value.stock = result.stock
+          cardInfo.value.nowPrice = result.nowPrice
+          cardInfo.value.discount = result.discount
+          cardInfo.value.isEffective = result.isEffective
+        } catch (err) {
+          stockError.value = true
+          //@ts-ignore
+          ElMessage({
+            message: `获取商品库存失败`,
+            type: 'warning',
+          })
+        } finally {
+          stockLoding.value = false
+        }
+        cardInfo.value.skuId = skusItem.id
+        cardInfo.value.picture = skusItem.picture
+        skuName.value.cloned.forEach((skuItem: IgoodsDetailsSpec, index: number) => {
+          cardInfo.value.attrsText += skuItem.name + '：' + skuItem.values + ' '
+        })
+        if (cardInfo.value.stock < cardInfo.value.count) {
+          //@ts-ignore
+          ElMessage({
+            message: `当前选中的商品库存为${cardInfo.value.stock}, 您选择的商品数量超出库存`,
+            type: 'warning',
+          })
+          return
+        } else if (cardInfo.value.stock === 0) {
+          //@ts-ignore
+          ElMessage({
+            message: `当前商品库存为0, 暂时不能加入购物车`,
+            type: 'warning',
+          })
+          return
+        }
+        useShoppingCart.addCart(cardInfo.value)
+        cardInfo.value.attrsText = ''
+      }
+    })
   }
+
+  const setSkuName = (SkuName: string, val: string | null) => {
+    skuName.value.cloned.some((item: any, index: number) => {
+      if (item.name === SkuName) {
+        item.values = val
+        return true
+      }
+    })
+    console.log(skuName.value.cloned)
+  }
+
   const compareArrays = (arr1: any, arr2: any) => {
     // 如果数组长度不相等，则两个数组不相等
     if (arr1.length !== arr2.length) {

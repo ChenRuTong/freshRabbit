@@ -76,6 +76,7 @@
 <style scoped lang="scss">
   .hotGood {
     width: 265px;
+    margin-left: 10px;
     .title {
       background-color: rgb(226, 98, 55);
       padding: 20px;
