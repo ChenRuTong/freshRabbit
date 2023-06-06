@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Login from '../views/login.vue'
+import Login from '../views/login/index.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -9,8 +9,8 @@ const router = createRouter({
       redirect: '/login',
     },
     {
-      path: '/login',
-      name: 'home',
+      path: '/login/:fromPath?',
+      name: 'login',
       component: Login,
     },
     {
@@ -48,6 +48,11 @@ const router = createRouter({
           path: 'cartList',
           name: 'cartList',
           component: () => import('../views/cartList/index.vue'),
+        },
+        {
+          path: 'orderPage',
+          name: 'orderPage',
+          component: () => import('../views/orderPage/index.vue'),
         },
       ],
     },

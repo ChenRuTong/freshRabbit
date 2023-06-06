@@ -108,7 +108,7 @@
 </template>
 
 <script setup lang="ts">
-  import { customerServicePath, weixinPath, problemPath, microBlogPath } from '@/svg/index.ts'
+  import { customerServicePath, weixinPath, problemPath, microBlogPath } from '@/svg/index'
 </script>
 
 <style scoped lang="scss">

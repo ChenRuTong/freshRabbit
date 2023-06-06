@@ -2,6 +2,7 @@
   <div class="cartList">
     <div class="content">
       <el-table
+        v-loading="useShoppingCart.carListLoading"
         ref="multipleTableRef"
         :data="useShoppingCart.carList"
         style="width: 100%"
@@ -20,31 +21,33 @@
 
         <el-table-column label="商品信息" width="180" :align="'center'">
           <template #default="scope">
-            <span class="tXtOverFlow">{{ scope.row.name.cloned }}</span>
+            <span class="tXtOverFlow">{{ scope.row.name.cloned || scope.row.name }}</span>
           </template>
         </el-table-column>
 
         <el-table-column width="180" label="单价" :align="'center'">
           <template #default="scope">
-            <span>￥{{ scope.row.price.cloned }}</span>
+            <span>￥{{ scope.row.price.cloned || scope.row.price }}</span>
           </template>
         </el-table-column>
 
         <el-table-column width="180" label="数量" :align="'center'">
           <template #default="scope">
-            <el-input-number v-model="scope.row.count" :min="1" :max="10" />
+            <el-input-number v-model="scope.row.count" :min="1" :max="10" @change="changeCount(scope.row)" />
           </template>
         </el-table-column>
 
         <el-table-column width="180" label="小计" :align="'center'">
           <template #default="scope">
-            <span class="subtotal"> ￥ {{ (scope.row.count * scope.row.price.cloned).toFixed(2) }} </span>
+            <span class="subtotal">
+              ￥ {{ (scope.row.count * (scope.row.price.cloned || scope.row.price)).toFixed(2) }}
+            </span>
           </template>
         </el-table-column>
 
         <el-table-column label="操作" :align="'center'">
           <template #default="scope">
-            <el-button type="primary" link @click="delGoods(scope.row.skuId)">删除</el-button>
+            <el-button type="primary" :loading="useShoppingCart.delCartLoading" link @click="delGoods(scope.row.skuId)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -54,7 +57,7 @@
           共 {{ useShoppingCart.allGoodNum }} 件商品，已选择 {{ useShoppingCart.allSeleGoodNum }} 商品共计：
           <span class="price">￥ {{ useShoppingCart.allprice.toFixed(2) }}</span>
         </div>
-        <el-button type="primary">下单结算</el-button>
+        <el-button type="primary" @click="goOrderPage">下单结算</el-button>
       </div>
     </div>
   </div>
@@ -62,18 +65,27 @@
 
 <script setup lang="ts">
   import { useShoppingCartStore } from '@/stores/shoppingCart'
-  import { nextTick, ref, type Ref } from 'vue'
+  import { nextTick, onMounted, ref, watch, type Ref } from 'vue'
+  import { useRouter } from 'vue-router'
 
   const useShoppingCart = useShoppingCartStore()
+  const router = useRouter()
   const multipleTableRef = ref()
 
   const multipleSelection: Ref<any> = ref([])
-
-  nextTick(() => {
-    useShoppingCart.carList.forEach((row: any) => {
-      multipleTableRef.value.toggleRowSelection(row, row.selected)
-    })
-  })
+  watch(
+    () => useShoppingCart.carList,
+    () => {
+      nextTick(() => {
+        useShoppingCart.carList.forEach((row: any) => {
+          multipleTableRef.value.toggleRowSelection(row, row.selected)
+        })
+      })
+    },
+    {
+      immediate: true
+    }
+  )
 
   const selectAll = (selection: any) => {
     multipleSelection.value = selection
@@ -84,13 +96,20 @@
     }
   }
 
-  const delGoods= (skuId: string)=> {
+  const delGoods = (skuId: string) => {
     useShoppingCart.delCart(skuId)
   }
 
-
   const select = (selection: any, row: any) => {
-    useShoppingCart.changeSele(false, row.skuId)
+    useShoppingCart.changeSele(false, row.skuId, row.selected)
+  }
+
+  const goOrderPage = () => {
+    router.push({ name: 'orderPage' })
+  }
+
+  const changeCount = (val: any)=> {
+    useShoppingCart.changeCount(val.skuId, { count: val.count })
   }
 </script>
 

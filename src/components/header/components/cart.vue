@@ -11,15 +11,15 @@
             <li v-for="(cartItem, index) in useShoppingCart.carList" :key="cartItem.skuId">
               <img v-lazy="cartItem.picture" />
               <div class="centerBox">
-                <span class="top tXtOverFlow2">{{ cartItem.name.cloned }}</span>
+                <span class="top tXtOverFlow2">{{ cartItem.name.cloned || cartItem.name }}</span>
                 <span class="bottom tXtOverFlow">{{ cartItem.attrsText }}</span>
               </div>
               <div class="rightBox">
-                <span class="top">￥{{ cartItem.price.cloned }}</span>
+                <span class="top">￥{{ cartItem.price.cloned || cartItem.price }}</span>
                 <span class="bottom">x {{ cartItem.count }}</span>
               </div>
               <div class="delBox">
-                <el-button type="danger" :icon="Delete" circle @click="delgoods(cartItem.skuId)" />
+                <el-button :loading="useShoppingCart.delCartLoading" type="danger" :icon="Delete" circle @click="delgoods(cartItem.skuId)" />
               </div>
             </li>
           </TransitionGroup>

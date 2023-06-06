@@ -25,7 +25,7 @@
   const props = withDefaults(
     defineProps<{
       categoryItem?: IsecondCategoryGood[] | IcategoryGood[] | IgoodsItem[]
-      isNormal: boolean
+      isNormal?: boolean
     }>(),
     {
       categoryItem: () => [],

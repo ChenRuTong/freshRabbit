@@ -13,7 +13,7 @@ const app = createApp(App)
 
 app.use(VueLazyload, {
   preLoad: 1.3,
-  error: 'https://hbimg.huaban.com/d4982ed1cd962e300153e3e1bfe4674493c32ae1f593-Uey3Vw_fw658',
+  error: new URL('../src/assets/imgErr.png', import.meta.url).href,
   loading: 'https://img.soogif.com/305PjuGtCDzK5xX2F4TlB0DHEuIk6CPM.gif',
   attempt: 1,
 })

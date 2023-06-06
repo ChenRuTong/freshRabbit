@@ -41,7 +41,7 @@
       </div>
     </div>
     <div class="mb-20"> <el-input-number v-model="goodNum" :min="1" @change="handleChange" /></div>
-    <el-button type="primary" @click="addCard">加入购物车</el-button>
+    <el-button type="primary" @click="addCard" :loading="useShoppingCart.addCartLoading">加入购物车</el-button>
   </div>
 </template>
 
@@ -59,8 +59,6 @@
   )
   const useShoppingCart = useShoppingCartStore()
   const goodNum = ref(1)
-  const stockLoding = ref(false)
-  const stockError = ref(false)
   const cardInfo: Ref<any> = ref({
     id: '',
     skuId: '',
@@ -136,21 +134,21 @@
     props.GoodsDetailsList.skus.forEach(async (skusItem, sindex) => {
       if (compareArrays(skusItem.specs, skuName.value.cloned)) {
         try {
-          stockLoding.value = true
+          useShoppingCart.addCartLoading = true
           const { msg, code, result } = await getStock(skusItem.id)
           cardInfo.value.stock = result.stock
           cardInfo.value.nowPrice = result.nowPrice
           cardInfo.value.discount = result.discount
           cardInfo.value.isEffective = result.isEffective
         } catch (err) {
-          stockError.value = true
+          useShoppingCart.addCartLoading = false
           //@ts-ignore
           ElMessage({
             message: `获取商品库存失败`,
             type: 'warning',
           })
         } finally {
-          stockLoding.value = false
+        
         }
         cardInfo.value.skuId = skusItem.id
         cardInfo.value.picture = skusItem.picture
@@ -158,6 +156,7 @@
           cardInfo.value.attrsText += skuItem.name + '：' + skuItem.values + ' '
         })
         if (cardInfo.value.stock < cardInfo.value.count) {
+          useShoppingCart.addCartLoading = false
           //@ts-ignore
           ElMessage({
             message: `当前选中的商品库存为${cardInfo.value.stock}, 您选择的商品数量超出库存`,
@@ -165,6 +164,7 @@
           })
           return
         } else if (cardInfo.value.stock === 0) {
+          useShoppingCart.addCartLoading = false
           //@ts-ignore
           ElMessage({
             message: `当前商品库存为0, 暂时不能加入购物车`,

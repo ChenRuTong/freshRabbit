@@ -12,6 +12,7 @@
   import cFooter from './components/footer.vue'
   import cNav from './components/nav.vue'
   import { useCategoryStore } from '@/stores/category'
+  import { useShoppingCartStore } from '@/stores/shoppingCart'
   import { ref, onMounted, onBeforeUnmount } from 'vue'
 
   const cHeaderRef = ref()
@@ -19,6 +20,8 @@
   const isNav = ref(true)
 
   const CategoryStore = useCategoryStore()
+  const useShoppingCart = useShoppingCartStore()
+  useShoppingCart.getCartList()
   CategoryStore.getCategoryList()
 
   onMounted(() => {
