@@ -69,15 +69,15 @@
           </div>
         </div>
         <div class="rightBox">
-          <div class="txtBox">下载app</div>
+          <div class="txtBox">加作者微信</div>
           <div class="iconBox">
             <div class="leftIcon">
-              <img src="" alt="" />
+              <img src="@/assets/wxcode.jpg" alt="" />
             </div>
             <div class="rightIcon">
               <span>扫描二维码</span>
-              <span class="mb-10">立马下载app</span>
-              <el-button>下载页面</el-button>
+              <span class="mb-10">cpdd</span>
+              <el-button type="primary">嘿嘿嘿</el-button>
             </div>
           </div>
         </div>

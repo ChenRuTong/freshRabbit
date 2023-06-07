@@ -54,6 +54,11 @@ const router = createRouter({
           name: 'orderPage',
           component: () => import('../views/orderPage/index.vue'),
         },
+        {
+          path: 'pay/:id',
+          name: 'pay',
+          component: () => import('../views/pay/index.vue'),
+        },
       ],
     },
   ],

@@ -33,7 +33,7 @@
 
         <el-table-column width="180" label="数量" :align="'center'">
           <template #default="scope">
-            <el-input-number v-model="scope.row.count" :min="1" :max="10" @change="changeCount(scope.row)" />
+            <el-input-number v-model="scope.row.count" :min="1" :max="scope.row.stock" @change="changeCount(scope.row)" />
           </template>
         </el-table-column>
 
