@@ -1,5 +1,5 @@
 export const getToken = (): any => {
-  return JSON.parse(JSON.stringify(localStorage.getItem('freshrabbitToken')))
+  return JSON.parse(localStorage.getItem('freshrabbitToken') || '{}')
 }
 
 export const setToken = (token: string) => {

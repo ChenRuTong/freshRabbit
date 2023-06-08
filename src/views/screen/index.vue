@@ -1,7 +1,7 @@
 <template>
   <div class="screen">
     <div class="content">
-      <div class="mt-20 mb-20">
+      <div class="mt-20 mb-20" v-if="breadcrumbList.parentId">
         <el-breadcrumb separator=">">
           <el-breadcrumb-item :to="{ path: '/layout/home' }">首页</el-breadcrumb-item>
           <el-breadcrumb-item :to="{ path: `/layout/category/${breadcrumbList.parentId}` }">

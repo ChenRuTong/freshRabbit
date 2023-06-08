@@ -33,7 +33,11 @@
 
         <el-table-column width="180" label="数量" :align="'center'">
           <template #default="scope">
-            <el-input-number v-model="scope.row.count" :min="1" :max="scope.row.stock" @change="changeCount(scope.row)" />
+            <el-input-number
+              v-model="scope.row.count"
+              :min="1"
+              :max="scope.row.stock"
+              @change="changeCount(scope.row)" />
           </template>
         </el-table-column>
 
@@ -47,7 +51,9 @@
 
         <el-table-column label="操作" :align="'center'">
           <template #default="scope">
-            <el-button type="primary" :loading="useShoppingCart.delCartLoading" link @click="delGoods(scope.row.skuId)">删除</el-button>
+            <el-button type="primary" :loading="useShoppingCart.delCartLoading" link @click="delGoods(scope.row.skuId)"
+              >删除</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -83,7 +89,7 @@
       })
     },
     {
-      immediate: true
+      immediate: true,
     }
   )
 
@@ -105,10 +111,19 @@
   }
 
   const goOrderPage = () => {
-    router.push({ name: 'orderPage' })
+    const isGoods = useShoppingCart.carList.every((item: any) => item.selected === false)
+    if (!isGoods) {
+      router.push({ name: 'orderPage' })
+    } else {
+      //@ts-ignore
+      ElMessage({
+        message: `至少需要选择一样商品`,
+        type: 'warning',
+      })
+    }
   }
 
-  const changeCount = (val: any)=> {
+  const changeCount = (val: any) => {
     useShoppingCart.changeCount(val.skuId, { count: val.count })
   }
 </script>

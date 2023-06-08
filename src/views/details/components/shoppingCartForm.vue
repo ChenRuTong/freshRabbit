@@ -185,7 +185,6 @@
         return true
       }
     })
-    console.log(skuName.value.cloned)
   }
 
   const compareArrays = (arr1: any, arr2: any) => {
